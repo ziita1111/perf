@@ -53,11 +53,11 @@ void set_msr(int idx){
   unsigned long base = 0;
   unsigned long none = 0;
   flag |= events[idx].event_select | events[idx].umask<<8;
-  flag |= 1<<16;
-  flag |= 1<<17;
-  flag |= 1<<20;
-  flag |= 1<<22;
-  base = 0x186;
+  flag |= 1<<16; // USR flag
+  flag |= 1<<17; // OS flag
+  flag |= 1<<20; // INT flag
+  flag |= 1<<22; // EN flag
+  base = 0x186; // IA32_PERFEVTSELx MSR
 
   int fd;
   char* msr_file_name = "/dev/cpu/0/msr";
@@ -73,7 +73,7 @@ void set_msr(int idx){
 }
 
 unsigned long read_msr(int idx){
-  unsigned int base_rdpmc = 0xc1;
+  unsigned int base_rdpmc = 0xc1; // IA32_PMCx MSRs
   unsigned long data;
   int fd;
   char* msr_file_name = "/dev/cpu/0/msr";
@@ -93,7 +93,7 @@ void main(int argc, char** argv){
   init_events();
   for(int i = 0; i < event_num; i++){
     if(!events[i].enable){
-      printf("%s: x\n", events[i].name);
+      printf("%s: unsupported\n", events[i].name);
       continue;
     }
     set_msr(i);
