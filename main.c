@@ -89,7 +89,7 @@ unsigned long read_msr(int idx){
   return data;
 }
 
-void main(int argc, char** argv){
+int main(int argc, char** argv){
   init_events();
   for(int i = 0; i < event_num; i++){
     if(!events[i].enable){
@@ -102,4 +102,5 @@ void main(int argc, char** argv){
     unsigned long post = read_msr(i);
     printf("%s: %ld\n", events[i].name, post-pre);
   }
+  return 0;
 }
